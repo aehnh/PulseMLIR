@@ -10,6 +10,7 @@
 #define ZXGRAPH_TYPES
 
 include "mlir/IR/OpBase.td"
+include "Dialect/ZXGraph/ZXGraphDialect.td"
 
 // !zxg.node
 def ZXGraph_NodeType : ZXGraph_Type<"Node"> {

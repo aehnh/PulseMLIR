@@ -10,6 +10,7 @@
 #define ZX_TYPES
 
 include "mlir/IR/OpBase.td"
+include "Dialect/ZX/ZXDialect.td"
 
 def ZX_WireType : ZX_Type<"Wire"> {
   let mnemonic = "wire";

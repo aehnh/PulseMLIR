@@ -10,6 +10,7 @@
 #define QASM_TYPES
 
 include "mlir/IR/OpBase.td"
+include "Dialect/QASM/QASMDialect.td"
 
 // !qasm.qubit
 def QASM_QubitType : QASM_Type<"Qubit"> {

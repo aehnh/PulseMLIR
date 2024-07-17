@@ -10,6 +10,7 @@
 #define PULSE_TYPES
 
 include "mlir/IR/OpBase.td"
+include "Dialect/Pulse/PulseDialect.td"
 
 def Pulse_WaveformType : Pulse_Type<"Waveform"> {
   let mnemonic = "waveform";
