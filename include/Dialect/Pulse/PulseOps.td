@@ -35,7 +35,7 @@ def Pulse_InitializeMemorySlotOp : Pulse_Op<"initialize_memory_slot", []> {
   let description = [{
     %ms0 = pulse.initialize_memory_slot() : () -> !pulse.memory_slot
   }];
-  let results = (outs Pulse_MemorySlotType:$ms)
+  let results = (outs Pulse_MemorySlotType:$ms);
   let assemblyFormat = [{ attr-dict `()` `:` `()` `->` type($ms) }];
 }
 
@@ -51,7 +51,7 @@ def Pulse_DragOp : Pulse_Op<"drag", []> {
     AnyComplex:$amp,
     AnyFloat:$angle
   );
-  let results = (outs Pulse_WaveformType:$wav)
+  let results = (outs Pulse_WaveformType:$wav);
   let assemblyFormat = [{ attr-dict `(` $dur `,` $sig `,` $beta `,` $amp `,` $angle `)` `:` `(` type($dur) `,` type($sig) `,` type($beta) `,` type($amp) `,` type($angle) `)` `->` type($wav) }];
 }
 
@@ -67,7 +67,7 @@ def Pulse_GaussianSquareOp : Pulse_Op<"gaussian_square", []> {
     AnyComplex:$amp,
     AnyFloat:$angle
   );
-  let results = (outs Pulse_WaveformType:$wav)
+  let results = (outs Pulse_WaveformType:$wav);
   let assemblyFormat = [{ attr-dict `(` $dur `,` $sig `,` $width `,` $amp `,` $angle `)` `:` `(` type($dur) `,` type($sig) `,` type($width) `,` type($amp) `,` type($angle) `)` `->` type($wav) }];
 }
 
@@ -80,7 +80,7 @@ def Pulse_PlayOp : Pulse_Op<"play", []> {
     Pulse_WaveformType:$wav,
     TransmitChannel:$cha
   );
-  let results = (outs Pulse_ActionType:$act)
+  let results = (outs Pulse_ActionType:$act);
   let assemblyFormat = [{ attr-dict `(` $wav `,` $cha `)` `:` `(` type($wav) `,` type($cha) `)` `->` type($act) }];
 }
 
@@ -93,7 +93,7 @@ def Pulse_DelayOp : Pulse_Op<"delay", []> {
     AnyInteger:$dur,
     TransmitChannel:$cha
   );
-  let results = (outs Pulse_ActionType:$act)
+  let results = (outs Pulse_ActionType:$act);
   let assemblyFormat = [{ attr-dict `(` $dur `,` $cha `)` `:` `(` type($dur) `,` type($cha) `)` `->` type($act) }];
 }
 
@@ -107,7 +107,7 @@ def Pulse_AcquireOp : Pulse_Op<"acquire", []> {
     TransmitChannel:$cha,
     Pulse_MemorySlotType:$mem
   );
-  let results = (outs Pulse_ActionType:$act)
+  let results = (outs Pulse_ActionType:$act);
   let assemblyFormat = [{ attr-dict `(` $dur `,` $cha `,` $mem `)` `:` `(` type($dur) `,` type($cha) `,` type($mem) `)` `->` type($act) }];
 }
 
