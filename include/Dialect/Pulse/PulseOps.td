@@ -13,8 +13,8 @@ include "mlir/IR/OpBase.td"
 include "mlir/Interfaces/SideEffectInterfaces.td"
 include "mlir/Interfaces/ControlFlowInterfaces.td"
 
-include "PulseDialect.td"
-include "PulseTypes.td"
+include "Dialect/Pulse/PulseDialect.td"
+include "Dialect/Pulse/PulseTypes.td"
 
 def Pulse_InitializeChannelsOp : Pulse_Op<"initialize_channels", []> {
   let summary = "Initialize channels for a single qubit";

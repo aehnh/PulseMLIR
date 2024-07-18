@@ -52,8 +52,18 @@ RUN cmake -G Ninja -S .. -B . \
     -DCMAKE_BUILD_TYPE=Release
 RUN cmake --build . --target check-quantum-opt || true
 
-# # convert example OpenQASM codes into QASM MLIR dialect
-# WORKDIR /PulseMLIR
+# convert example OpenQASM codes into QASM MLIR dialect
+WORKDIR /PulseMLIR
+RUN mkdir lib/Dialect/Pulse
+
+RUN ../llvm-project/install/bin/mlir-tblgen --gen-dialect-decls -I include -I ../llvm-project/mlir/include include/Dialect/Pulse/PulseDialect.td -o include/Dialect/Pulse/PulseDialect.h
+
+RUN ../llvm-project/install/bin/mlir-tblgen --gen-typedef-decls -I include -I ../llvm-project/mlir/include include/Dialect/Pulse/PulseTypes.td -o include/Dialect/Pulse/PulseTypes.h
+RUN ../llvm-project/install/bin/mlir-tblgen --gen-typedef-defs -I include -I ../llvm-project/mlir/include include/Dialect/Pulse/PulseTypes.td -o lib/Dialect/Pulse/PulseTypes.cpp
+
+RUN ../llvm-project/install/bin/mlir-tblgen --gen-op-decls -I include -I ../llvm-project/mlir/include include/Dialect/Pulse/PulseOps.td -o include/Dialect/Pulse/PulseOps.h
+RUN ../llvm-project/install/bin/mlir-tblgen --gen-op-defs -I include -I ../llvm-project/mlir/include include/Dialect/Pulse/PulseOps.td -o lib/Dialect/Pulse/PulseOps.cpp
+
 # RUN pip install qiskit==0.46.1
 # RUN python3 tools/openqasm-to-mlir.py \
 #     -i test/Translation/OpenQASM/from-paper/E2-teleportation.qasm \
