@@ -56,6 +56,9 @@ RUN cmake --build . --target check-quantum-opt || true
 WORKDIR /PulseMLIR
 RUN mkdir lib/Dialect/Pulse
 
+RUN git fetch origin
+RUN git pull
+
 RUN ../llvm-project/install/bin/mlir-tblgen --gen-dialect-decls -I include -I ../llvm-project/mlir/include include/Dialect/Pulse/PulseDialect.td -o include/Dialect/Pulse/PulseDialect.h
 
 RUN ../llvm-project/install/bin/mlir-tblgen --gen-typedef-decls -I include -I ../llvm-project/mlir/include include/Dialect/Pulse/PulseTypes.td -o include/Dialect/Pulse/PulseTypes.h
@@ -63,6 +66,8 @@ RUN ../llvm-project/install/bin/mlir-tblgen --gen-typedef-defs -I include -I ../
 
 RUN ../llvm-project/install/bin/mlir-tblgen --gen-op-decls -I include -I ../llvm-project/mlir/include include/Dialect/Pulse/PulseOps.td -o include/Dialect/Pulse/PulseOps.h
 RUN ../llvm-project/install/bin/mlir-tblgen --gen-op-defs -I include -I ../llvm-project/mlir/include include/Dialect/Pulse/PulseOps.td -o lib/Dialect/Pulse/PulseOps.cpp
+
+RUN cmake --build build --target mlir-doc
 
 # RUN pip install qiskit==0.46.1
 # RUN python3 tools/openqasm-to-mlir.py \
