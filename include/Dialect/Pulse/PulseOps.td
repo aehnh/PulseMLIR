@@ -27,7 +27,7 @@ def Pulse_InitializeChannelsOp : Pulse_Op<"initialize_channels", []> {
     Pulse_MeasureChannelType:$mc,
     Pulse_AcquireChannelType:$ac
   );
-  let assemblyFormat = [{ attr-dict `()` `:` `()` `->` `(` type($dc) `,` type($cc) `,` type($mc) `,` type($ac) `)` }];
+  let assemblyFormat = [{ attr-dict `(` `)` `:` `(` `)` `->` `(` type($dc) `,` type($cc) `,` type($mc) `,` type($ac) `)` }];
 }
 
 def Pulse_InitializeMemorySlotOp : Pulse_Op<"initialize_memory_slot", []> {
@@ -36,7 +36,7 @@ def Pulse_InitializeMemorySlotOp : Pulse_Op<"initialize_memory_slot", []> {
     %ms0 = pulse.initialize_memory_slot() : () -> !pulse.memory_slot
   }];
   let results = (outs Pulse_MemorySlotType:$ms);
-  let assemblyFormat = [{ attr-dict `()` `:` `()` `->` type($ms) }];
+  let assemblyFormat = [{ attr-dict `(` `)` `:` `(` `)` `->` type($ms) }];
 }
 
 def Pulse_DragOp : Pulse_Op<"drag", []> {
