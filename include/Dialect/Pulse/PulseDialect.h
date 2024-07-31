@@ -1,27 +1,16 @@
-/*===- TableGen'erated file -------------------------------------*- C++ -*-===*\
-|*                                                                            *|
-|* Dialect Declarations                                                       *|
-|*                                                                            *|
-|* Automatically generated file, do not edit!                                 *|
-|*                                                                            *|
-\*===----------------------------------------------------------------------===*/
+//===- PulseDialect.h - Pulse dialect ------------ ----------------*- C++ -*-===//
+//
+// This file is licensed under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+//
+//===----------------------------------------------------------------------===//
 
-namespace mlir {
-namespace pulse {
+#ifndef PULSE_PULSEDIALECT_H
+#define PULSE_PULSEDIALECT_H
 
-class PulseDialect : public ::mlir::Dialect {
-  explicit PulseDialect(::mlir::MLIRContext *context)
-    : ::mlir::Dialect(getDialectNamespace(), context,
-      ::mlir::TypeID::get<PulseDialect>()) {
-    
-    initialize();
-  }
-  void initialize();
-  friend class ::mlir::MLIRContext;
-public:
-  static constexpr ::llvm::StringLiteral getDialectNamespace() {
-    return ::llvm::StringLiteral("pulse");
-  }
-};
-} // namespace pulse
-} // namespace mlir
+#include "mlir/IR/Dialect.h"
+
+#include "Dialect/Pulse/PulseOpsDialect.h.inc"
+
+#endif // PULSE_PULSEDIALECT_H

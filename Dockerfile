@@ -58,15 +58,15 @@ RUN cmake --build . --target check-quantum-opt || true
 WORKDIR /PulseMLIR
 RUN mkdir -p lib/Dialect/Pulse
 
-RUN ../llvm-project/install/bin/mlir-tblgen --gen-dialect-decls -I include -I ../llvm-project/mlir/include include/Dialect/Pulse/PulseDialect.td -o include/Dialect/Pulse/PulseDialect.h
+# RUN ../llvm-project/install/bin/mlir-tblgen --gen-dialect-decls -I include -I ../llvm-project/mlir/include include/Dialect/Pulse/PulseDialect.td -o include/Dialect/Pulse/PulseDialect.h
 
-RUN ../llvm-project/install/bin/mlir-tblgen --gen-typedef-decls -I include -I ../llvm-project/mlir/include include/Dialect/Pulse/PulseTypes.td -o include/Dialect/Pulse/PulseTypes.h
-RUN ../llvm-project/install/bin/mlir-tblgen --gen-typedef-defs -I include -I ../llvm-project/mlir/include include/Dialect/Pulse/PulseTypes.td -o lib/Dialect/Pulse/PulseTypes.cpp
+# RUN ../llvm-project/install/bin/mlir-tblgen --gen-typedef-decls -I include -I ../llvm-project/mlir/include include/Dialect/Pulse/PulseTypes.td -o include/Dialect/Pulse/PulseTypes.h
+# RUN ../llvm-project/install/bin/mlir-tblgen --gen-typedef-defs -I include -I ../llvm-project/mlir/include include/Dialect/Pulse/PulseTypes.td -o lib/Dialect/Pulse/PulseTypes.cpp
 
-RUN ../llvm-project/install/bin/mlir-tblgen --gen-op-decls -I include -I ../llvm-project/mlir/include include/Dialect/Pulse/PulseOps.td -o include/Dialect/Pulse/PulseOps.h
-RUN ../llvm-project/install/bin/mlir-tblgen --gen-op-defs -I include -I ../llvm-project/mlir/include include/Dialect/Pulse/PulseOps.td -o lib/Dialect/Pulse/PulseOps.cpp
+# RUN ../llvm-project/install/bin/mlir-tblgen --gen-op-decls -I include -I ../llvm-project/mlir/include include/Dialect/Pulse/PulseOps.td -o include/Dialect/Pulse/PulseOps.h
+# RUN ../llvm-project/install/bin/mlir-tblgen --gen-op-defs -I include -I ../llvm-project/mlir/include include/Dialect/Pulse/PulseOps.td -o lib/Dialect/Pulse/PulseOps.cpp
 
-RUN ../llvm-project/install/bin/mlir-tblgen --gen-pass-decls -I include -I ../llvm-project/mlir/include include/Conversion/QASMToPulse/Passes.td -o include/Conversion/QASMToPulse/Passes.h
+# RUN ../llvm-project/install/bin/mlir-tblgen --gen-pass-decls -I include -I ../llvm-project/mlir/include include/Conversion/QASMToPulse/Passes.td -o include/Conversion/QASMToPulse/Passes.h
 
 RUN cmake --build build --target mlir-doc
 
