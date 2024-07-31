@@ -32,6 +32,8 @@ RUN cmake -S llvm -B build -G Ninja \
     -DCMAKE_BUILD_TYPE=Release
 RUN ninja -C build install
 
+RUN echo "wtf"
+
 WORKDIR /
 RUN git clone https://github.com/aehnh/PulseMLIR.git
 
@@ -54,10 +56,7 @@ RUN cmake --build . --target check-quantum-opt || true
 
 # convert example OpenQASM codes into QASM MLIR dialect
 WORKDIR /PulseMLIR
-RUN mkdir lib/Dialect/Pulse
-
-RUN git fetch origin
-RUN git pull
+RUN mkdir -p lib/Dialect/Pulse
 
 RUN ../llvm-project/install/bin/mlir-tblgen --gen-dialect-decls -I include -I ../llvm-project/mlir/include include/Dialect/Pulse/PulseDialect.td -o include/Dialect/Pulse/PulseDialect.h
 
@@ -66,6 +65,8 @@ RUN ../llvm-project/install/bin/mlir-tblgen --gen-typedef-defs -I include -I ../
 
 RUN ../llvm-project/install/bin/mlir-tblgen --gen-op-decls -I include -I ../llvm-project/mlir/include include/Dialect/Pulse/PulseOps.td -o include/Dialect/Pulse/PulseOps.h
 RUN ../llvm-project/install/bin/mlir-tblgen --gen-op-defs -I include -I ../llvm-project/mlir/include include/Dialect/Pulse/PulseOps.td -o lib/Dialect/Pulse/PulseOps.cpp
+
+RUN ../llvm-project/install/bin/mlir-tblgen --gen-pass-decls -I include -I ../llvm-project/mlir/include include/Conversion/QASMToPulse/Passes.td -o include/Conversion/QASMToPulse/Passes.h
 
 RUN cmake --build build --target mlir-doc
 
