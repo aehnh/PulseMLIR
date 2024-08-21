@@ -122,7 +122,7 @@ def Pulse_BarrierOp : Pulse_Op<"barrier", []> {
     Pulse_MeasureChannelType:$mc,
     Pulse_AcquireChannelType:$ac
   );
-  let assemblyFormat = [{ attr-dict `(` $dc `,` $cc `,` $mc `,` $ac `)` }]
+  let assemblyFormat = [{ attr-dict `(` $dc `,` $cc `,` $mc `,` $ac `)` }];
 }
 
 #endif // PULSE_OPS
