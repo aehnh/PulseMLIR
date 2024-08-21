@@ -32,14 +32,6 @@ def Pulse_AcquireChannelType : Pulse_Type<"AcquireChannel"> {
   let mnemonic = "acquire_channel";
 }
 
-def Pulse_MemorySlotType : Pulse_Type<"MemorySlot"> {
-  let mnemonic = "memory_slot";
-}
-
-def Pulse_ActionType : Pulse_Type<"Action"> {
-  let mnemonic = "action";
-}
-
 def TransmitChannel : AnyTypeOf<[Pulse_DriveChannelType, Pulse_ControlChannelType, Pulse_MeasureChannelType]>;
 
 #endif // PULSE_TYPES

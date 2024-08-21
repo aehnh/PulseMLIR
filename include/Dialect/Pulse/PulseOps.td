@@ -19,7 +19,7 @@ include "Dialect/Pulse/PulseTypes.td"
 def Pulse_InitializeChannelsOp : Pulse_Op<"initialize_channels", []> {
   let summary = "Initialize channels for a single qubit";
   let description = [{
-    %dc0, %cc0, %mc0, %ac1 = pulse.initialize_channels() : () -> (!pulse.drive_channel, !pulse.control_channel, !pulse.measure_channel, !pulse.acquire_channel)
+    %dc0, %cc0, %mc0, %ac0 = pulse.initialize_channels() : (!pulse.drive_channel, !pulse.control_channel, !pulse.measure_channel, !pulse.acquire_channel)
   }];
   let results = (outs
     Pulse_DriveChannelType:$dc,
@@ -27,7 +27,7 @@ def Pulse_InitializeChannelsOp : Pulse_Op<"initialize_channels", []> {
     Pulse_MeasureChannelType:$mc,
     Pulse_AcquireChannelType:$ac
   );
-  let assemblyFormat = [{ attr-dict `(` `)` `:` `(` `)` `->` `(` type($dc) `,` type($cc) `,` type($mc) `,` type($ac) `)` }];
+  let assemblyFormat = [{ attr-dict `(` type($dc) `,` type($cc) `,` type($mc) `,` type($ac) `)` }];
 }
 
 def Pulse_InitializeMemorySlotOp : Pulse_Op<"initialize_memory_slot", []> {
@@ -42,13 +42,13 @@ def Pulse_InitializeMemorySlotOp : Pulse_Op<"initialize_memory_slot", []> {
 def Pulse_DragOp : Pulse_Op<"drag", []> {
   let summary = "Create drag waveform";
   let description = [{
-    %drag = pulse.drag(%dur, %sig, %beta, %amp, %angle) : (i32, i32, f64, complex<f64>, f64) -> !pulse.waveform
+    %drag = pulse.drag(%dur, %sig, %beta, %amp, %angle) : (i32, i32, f64, f64, f64) -> !pulse.waveform
   }];
   let arguments = (ins
     AnyInteger:$dur,
     AnyInteger:$sig,
     AnyFloat:$beta,
-    AnyComplex:$amp,
+    AnyFloat:$amp,
     AnyFloat:$angle
   );
   let results = (outs Pulse_WaveformType:$wav);
@@ -58,13 +58,13 @@ def Pulse_DragOp : Pulse_Op<"drag", []> {
 def Pulse_GaussianSquareOp : Pulse_Op<"gaussian_square", []> {
   let summary = "Create gaussian square waveform";
   let description = [{
-    %gauss2 = pulse.gaussian_square(%dur, %sig, %width, %amp, %angle) : (i32, i32, i32, complex<f64>, f64) -> !pulse.waveform
+    %gauss2 = pulse.gaussian_square(%dur, %sig, %width, %amp, %angle) : (i32, i32, i32, f64, f64) -> !pulse.waveform
   }];
   let arguments = (ins
     AnyInteger:$dur,
     AnyInteger:$sig,
     AnyInteger:$width,
-    AnyComplex:$amp,
+    AnyFloat:$amp,
     AnyFloat:$angle
   );
   let results = (outs Pulse_WaveformType:$wav);
@@ -74,41 +74,38 @@ def Pulse_GaussianSquareOp : Pulse_Op<"gaussian_square", []> {
 def Pulse_PlayOp : Pulse_Op<"play", []> {
   let summary = "Play a waveform on a channel";
   let description = [{
-    %act = pulse.play(%wav, %cha) : (!pulse.waveform, !pulse.drive_channel)
+    pulse.play(%wav, %cha) : (!pulse.waveform, !pulse.drive_channel)
   }];
   let arguments = (ins
     Pulse_WaveformType:$wav,
     TransmitChannel:$cha
   );
-  let results = (outs Pulse_ActionType:$act);
-  let assemblyFormat = [{ attr-dict `(` $wav `,` $cha `)` `:` `(` type($wav) `,` type($cha) `)` `->` type($act) }];
+  let assemblyFormat = [{ attr-dict `(` $wav `,` $cha `)` `:` `(` type($wav) `,` type($cha) `)` }];
 }
 
 def Pulse_DelayOp : Pulse_Op<"delay", []> {
   let summary = "Delay for a duration on a channel";
   let description = [{
-    %act = pulse.delay(%dur, %cha) : (i32, !pulse.drive_channel)
+    pulse.delay(%dur, %cha) : (i32, !pulse.drive_channel)
   }];
   let arguments = (ins
     AnyInteger:$dur,
     TransmitChannel:$cha
   );
-  let results = (outs Pulse_ActionType:$act);
-  let assemblyFormat = [{ attr-dict `(` $dur `,` $cha `)` `:` `(` type($dur) `,` type($cha) `)` `->` type($act) }];
+  let assemblyFormat = [{ attr-dict `(` $dur `,` $cha `)` `:` `(` type($dur) `,` type($cha) `)` }];
 }
 
 def Pulse_AcquireOp : Pulse_Op<"acquire", []> {
   let summary = "Acquire value into a memory slot";
   let description = [{
-    %act = pulse.acquire(%dur, %cha, %mem) : (i32, !pulse.drive_channel, !pulse.memory_slot)
+    %res = pulse.acquire(%dur, %cha) : (i1, !pulse.drive_channel)
   }];
   let arguments = (ins
     AnyInteger:$dur,
-    TransmitChannel:$cha,
-    Pulse_MemorySlotType:$mem
+    TransmitChannel:$cha
   );
-  let results = (outs Pulse_ActionType:$act);
-  let assemblyFormat = [{ attr-dict `(` $dur `,` $cha `,` $mem `)` `:` `(` type($dur) `,` type($cha) `,` type($mem) `)` `->` type($act) }];
+  let results = (outs I1:$res);
+  let assemblyFormat = [{ attr-dict `(` $dur `,` $cha `)` `:` `(` type($dur) `,` type($cha) `)` }];
 }
 
 def Pulse_ShiftPhaseOp : Pulse_Op<"shift_phase", []> {
@@ -123,16 +120,18 @@ def Pulse_ShiftPhaseOp : Pulse_Op<"shift_phase", []> {
   let assemblyFormat = [{ attr-dict `(` $phase `,` $cha `)` `:` `(` type($phase) `,` type($cha) `)` }];
 }
 
-def Pulse_ScheduleOp : Pulse_Op<"schedule", []> {
-  let summary = "Schedule an action";
+def Pulse_BarrierOp : Pulse_Op<"barrier", []> {
+  let summary = "Synchronize channels with delays";
   let description = [{
-    pulse.schedule(%time, %act) : (i32, !pulse.action)
+    pulse.barrier(%dc0, %cc0, %mc0, %ac0) : (!pulse.drive_channel, !pulse.control_channel, !pulse.measure_channel, !pulse.acquire_channel)
   }];
   let arguments = (ins
-    AnyInteger:$time,
-    Pulse_ActionType:$act
+    Pulse_DriveChannelType:$dc,
+    Pulse_ControlChannelType:$cc,
+    Pulse_MeasureChannelType:$mc,
+    Pulse_AcquireChannelType:$ac
   );
-  let assemblyFormat = [{ attr-dict `(` $time `,` $act `)` `:` `(` type($time) `,` type($act) `)` }];
+  let assemblyFormat = [{ attr-dict `(` $dc `,` $cc `,` $mc `,` $ac `)` }]
 }
 
 #endif // PULSE_OPS
