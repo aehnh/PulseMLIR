@@ -685,16 +685,20 @@ struct QASMToPulseTarget : public ConversionTarget {
     addLegalDialect<scf::SCFDialect>();
 
     addIllegalDialect<QASM::QASMDialect>();
-    // addDynamicallyLegalOp<FuncOp>(
-    //     [&](FuncOp funcOp) -> bool { return !funcOp->hasAttr("qasm.gate"); });
-    // addDynamicallyLegalOp<CallOp>(
-    //     [&](CallOp callOp) -> bool { return !callOp->hasAttr("qasm.gate"); });
-    // addDynamicallyLegalOp<ReturnOp>(
-    //     [&](ReturnOp returnOp) { return !returnOp->hasAttr("qasm.gate_end"); });
-    addDynamicallyLegalOp<scf::IfOp>(
-        [&](scf::IfOp op) { return !op->hasAttr("qasm.if"); });
+    addDynamicallyLegalOp<FuncOp>(
+        [&](FuncOp funcOp) -> bool { return !funcOp->hasAttr("qasm.gate"); });
+    addDynamicallyLegalOp<CallOp>(
+        [&](CallOp callOp) -> bool { return !callOp->hasAttr("qasm.gate"); });
+    addDynamicallyLegalOp<ReturnOp>(
+        [&](ReturnOp returnOp) { return !returnOp->hasAttr("qasm.gate_end"); });
+      addDynamicallyLegalOp<scf::IfOp>(
+        [&](scf::IfOp op) { return true; });
     addDynamicallyLegalOp<scf::YieldOp>(
-        [&](scf::YieldOp op) { return !op->hasAttr("qasm.if"); });
+        [&](scf::YieldOp op) { return true; });
+    // addDynamicallyLegalOp<scf::IfOp>(
+    //     [&](scf::IfOp op) { return !op->hasAttr("qasm.if"); });
+    // addDynamicallyLegalOp<scf::YieldOp>(
+    //     [&](scf::YieldOp op) { return !op->hasAttr("qasm.if"); });
   }
 };
 
