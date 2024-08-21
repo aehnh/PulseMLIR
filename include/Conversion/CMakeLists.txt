@@ -1,4 +1,5 @@
 add_subdirectory(QuantumToLLVM)
+add_subdirectory(QASMToPulse)
 add_subdirectory(QASMToQuantum)
 add_subdirectory(QASMToSCF)
 add_subdirectory(QuantumToQASM)
