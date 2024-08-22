@@ -75,11 +75,11 @@ public:
                   ConversionPatternRewriter &rewriter) const override {
     auto initChannelsOp = rewriter.create<pulse::InitializeChannelsOp>(
       op->getLoc(),
-      {
-        pulse::DriveChannelType(),
-        pulse::ControlChannelType(),
-        pulse::MeasureChannelType(),
-        pulse::AcquireChannelType()
+      TypeRange{
+        pulse::DriveChannelType::get(rewriter.getContext()),
+        pulse::ControlChannelType::get(rewriter.getContext()),
+        pulse::MeasureChannelType::get(rewriter.getContext()),
+        pulse::AcquireChannelType::get(rewriter.getContext())
       },
       ValueRange{}
     );
