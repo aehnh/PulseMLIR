@@ -76,10 +76,10 @@ public:
     auto initChannelsOp = rewriter.create<pulse::InitializeChannelsOp>(
       op->getLoc(),
       {
-        pulse::DriveChannelType,
-        pulse::ControlChannelType,
-        pulse::MeasureChannelType,
-        pulse::AcquireChannelType
+        pulse::DriveChannelType(),
+        pulse::ControlChannelType(),
+        pulse::MeasureChannelType(),
+        pulse::AcquireChannelType()
       },
       ValueRange{}
     );
@@ -88,7 +88,7 @@ public:
       initChannelsOp.getResult(1),
       initChannelsOp.getResult(2),
       initChannelsOp.getResult(3)
-    }
+    };
     qubitMap->setMapping(
       op->getParentOfType<FuncOp>(),
       op.qout(),
