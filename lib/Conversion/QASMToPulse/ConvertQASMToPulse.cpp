@@ -370,8 +370,6 @@ public:
     TypeConverter::SignatureConversion inputs(funcOp.getNumArguments());
     size_t argIndex = 0;
     for (auto &en : llvm::enumerate(funcOp.getType().getInputs())) {
-      Value qubitArg = en.value();
-
       if (en.value().isa<QASM::QubitType>()) {
         auto driveChannel = rewriter.getType<pulse::DriveChannelType>();
         auto controlChannel = rewriter.getType<pulse::ControlChannelType>();
@@ -385,7 +383,7 @@ public:
 
         argIndex += 4;
       } else {
-        inputs.addInputs(argIndex, typeConverter->convertType(qubitArg.getType()));
+        inputs.addInputs(argIndex, typeConverter->convertType(en.value()));
 
         argIndex++;
       }
