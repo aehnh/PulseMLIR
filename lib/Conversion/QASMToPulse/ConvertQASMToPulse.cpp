@@ -589,7 +589,6 @@ public:
           << "Unknown gate call, converting to std.call instead";
       auto newCallOp = rewriter.create<CallOp>(
           gateOp->getLoc(), gateOp.gate_name(), TypeRange{}, arguments);
-      resultQubits = newCallOp.getResults();
     }
 
     rewriter.eraseOp(gateOp);
