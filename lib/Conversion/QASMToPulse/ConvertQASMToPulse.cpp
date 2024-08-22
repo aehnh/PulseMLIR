@@ -369,8 +369,11 @@ public:
     // generate converted function type
     TypeConverter::SignatureConversion inputs(funcOp.getNumArguments());
     size_t argIndex = 0;
+    std::vector<Value> qubitArgs;
     for (auto &en : llvm::enumerate(funcOp.getType().getInputs())) {
       if (en.value().isa<QASM::QubitType>()) {
+        qubitArgs.push_back(funcOp.getArgument(en.index()));
+
         auto driveChannel = rewriter.getType<pulse::DriveChannelType>();
         auto controlChannel = rewriter.getType<pulse::ControlChannelType>();
         auto measureChannel = rewriter.getType<pulse::MeasureChannelType>();
@@ -406,6 +409,7 @@ public:
     rewriter.eraseOp(funcOp);
 
     auto bodyArgs = newFuncOp.getBody().getArguments();
+    size_t qubitArgIndex = 0;
     for (size_t i = 0; i < bodyArgs.size(); i++) {
       if (bodyArgs[i].getType().isa<pulse::DriveChannelType>()) {
         if (i + 3 < bodyArgs.size()) {
@@ -415,10 +419,11 @@ public:
             bodyArgs[i + 2],
             bodyArgs[i + 3]
           };
+          Value qubitArg = qubitArgs[qubitArgIndex++];
           qubitMap->setMapping(funcOp, qubitArg, channels);
           i += 3;
         } else {
-          llvm::errs() << "Not enough remaining arguments to form a complete DriveChannel group.\n";
+          llvm::errs() << "Not enough remaining arguments to form a complete channel group.\n";
           return failure();
         }
       }
