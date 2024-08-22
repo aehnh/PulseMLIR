@@ -474,8 +474,7 @@ public:
     }
 
     // generate new call
-    auto newCallOp = rewriter.create<CallOp>(
-        callOp->getLoc(), callOp.getCallee(), TypeRange{}, arguments);
+    rewriter.create<CallOp>(callOp->getLoc(), callOp.getCallee(), TypeRange{}, arguments);
     rewriter.eraseOp(callOp);
 
     return success();
@@ -489,7 +488,7 @@ public:
   LogicalResult
   matchAndRewrite(QASM::GateCall gateOp, ArrayRef<Value> operands,
                   ConversionPatternRewriter &rewriter) const override {
-    auto func = op->getParentOfType<FuncOp>();
+    auto func = gateOp->getParentOfType<FuncOp>();
     Value dc0;
     Value alpha;
     for (auto arg : operands) {
@@ -500,7 +499,7 @@ public:
         alpha = arg;
       }
     }
-    auto loc = op->getLoc();
+    auto loc = gateOp->getLoc();
 
     // currently supported: x, y, z, s, sdg, t, tdg, rx, ry, rz
     if (gateOp.gate_name() == "x") {
@@ -589,7 +588,7 @@ public:
       emitWarning(gateOp->getLoc())
           << "Unknown gate call, converting to std.call instead";
       auto newCallOp = rewriter.create<CallOp>(
-          gateOp->getLoc(), gateOp.gate_name(), resultTypes, arguments);
+          gateOp->getLoc(), gateOp.gate_name(), TypeRange{}, arguments);
       resultQubits = newCallOp.getResults();
     }
 
