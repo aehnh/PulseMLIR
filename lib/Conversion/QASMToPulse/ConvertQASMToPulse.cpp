@@ -130,7 +130,7 @@ public:
     auto width = rewriter.create<ConstantOp>(loc, rewriter.getI32IntegerAttr(1216));
     auto amp = rewriter.create<ConstantOp>(loc, rewriter.getF64FloatAttr(0.23564));
     auto angle = rewriter.create<ConstantOp>(loc, rewriter.getF64FloatAttr(-1.9104095842958464));
-    auto wav = rewriter.create<pulse::GaussianSquareOp>(loc, pulse::WaveformType, dur, sig, width, amp, angle);
+    auto wav = rewriter.create<pulse::GaussianSquareOp>(loc, pulse::WaveformType(), dur, sig, width, amp, angle);
     rewriter.create<pulse::PlayOp>(loc, wav, measureChannel);
     auto dur1 = rewriter.create<ConstantOp>(loc, rewriter.getI32IntegerAttr(1568));
     rewriter.create<pulse::DelayOp>(loc, dur1, measureChannel);
@@ -172,7 +172,7 @@ public:
     auto width = rewriter.create<ConstantOp>(loc, rewriter.getI32IntegerAttr(1216));
     auto amp = rewriter.create<ConstantOp>(loc, rewriter.getF64FloatAttr(0.23564));
     auto angle = rewriter.create<ConstantOp>(loc, rewriter.getF64FloatAttr(-1.9104095842958464));
-    auto wav = rewriter.create<pulse::GaussianSquareOp>(loc, pulse::WaveformType, dur, sig, width, amp, angle);
+    auto wav = rewriter.create<pulse::GaussianSquareOp>(loc, pulse::WaveformType(), dur, sig, width, amp, angle);
     rewriter.create<pulse::PlayOp>(loc, wav, measureChannel);
     auto dur1 = rewriter.create<ConstantOp>(loc, rewriter.getI32IntegerAttr(1568));
     rewriter.create<pulse::DelayOp>(loc, dur1, measureChannel);
@@ -226,7 +226,7 @@ public:
 class SingleQubitRotationOpConversion
     : public QASMOpToPulseConversionPattern<QASM::SingleQubitRotationOp> {
 public:
-  using QASMOpToPulseConversionPattern::QASMOpToQuantumConversionPattern;
+  using QASMOpToPulseConversionPattern::QASMOpToPulseConversionPattern;
   LogicalResult
   matchAndRewrite(QASM::SingleQubitRotationOp op, ArrayRef<Value> operands,
                   ConversionPatternRewriter &rewriter) const override {
@@ -586,8 +586,8 @@ public:
   }
 };
 
-// struct SCFIfConversion : QASMOpToQuantumConversionPattern<scf::IfOp> {
-//   using QASMOpToQuantumConversionPattern::QASMOpToQuantumConversionPattern;
+// struct SCFIfConversion : QASMOpToPulseConversionPattern<scf::IfOp> {
+//   using QASMOpToPulseConversionPattern::QASMOpToPulseConversionPattern;
 //   LogicalResult
 //   matchAndRewrite(scf::IfOp ifOp, ArrayRef<Value> operands,
 //                   ConversionPatternRewriter &rewriter) const override {
