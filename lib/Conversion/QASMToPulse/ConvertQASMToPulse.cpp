@@ -176,7 +176,7 @@ public:
     rewriter.create<pulse::PlayOp>(loc, wav, measureChannel);
     auto dur1 = rewriter.create<ConstantOp>(loc, rewriter.getI32IntegerAttr(1568));
     rewriter.create<pulse::DelayOp>(loc, dur1, measureChannel);
-    auto res = rewriter.create<pulse::AcquireOp>(loc, rewriter.getI1Type(), dur, acquireChannel);
+    rewriter.create<pulse::AcquireOp>(loc, rewriter.getI1Type(), dur, acquireChannel);
 
     rewriter.eraseOp(op);
     return success();
@@ -383,15 +383,6 @@ public:
         inputs.addInputs(argIndex + 2, measureChannel);
         inputs.addInputs(argIndex + 3, acquireChannel);
 
-        std::vector<Value> channelValues = {
-          rewriter.create<pulse::DriveChannelOp>(funcOp->getLoc()),
-          rewriter.create<pulse::ControlChannelOp>(funcOp->getLoc()),
-          rewriter.create<pulse::MeasureChannelOp>(funcOp->getLoc()),
-          rewriter.create<pulse::AcquireChannelOp>(funcOp->getLoc())
-        };
-
-        qubitMap->setMapping(funcOp, qubitArg, channelValues);
-
         argIndex += 4;
       } else {
         inputs.addInputs(argIndex, typeConverter->convertType(qubitArg.getType()));
@@ -415,6 +406,25 @@ public:
     // Convert the signature and delete the original operation
     rewriter.applySignatureConversion(&newFuncOp.getBody(), inputs);
     rewriter.eraseOp(funcOp);
+
+    auto bodyArgs = newFuncOp.getBody().getArguments();
+    for (size_t i = 0; i < bodyArgs.size(); i++) {
+      if (bodyArgs[i].getType().isa<pulse::DriveChannelType>()) {
+        if (i + 3 < bodyArgs.size()) {
+          std::vector<Value> channels = {
+            bodyArgs[i],
+            bodyArgs[i + 1],
+            bodyArgs[i + 2],
+            bodyArgs[i + 3]
+          };
+          qubitMap->setMapping(funcOp, qubitArg, channels);
+          i += 3;
+        } else {
+          llvm::errs() << "Not enough remaining arguments to form a complete DriveChannel group.\n";
+          return failure();
+        }
+      }
+    }
 
     return success();
   }
