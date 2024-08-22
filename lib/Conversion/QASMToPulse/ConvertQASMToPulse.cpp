@@ -136,7 +136,7 @@ public:
     rewriter.create<pulse::DelayOp>(loc, dur1, measureChannel);
     auto res = rewriter.create<pulse::AcquireOp>(loc, rewriter.getI1Type(), dur, acquireChannel);
 
-    rewriter.replaceOp(op, result.getResult());
+    rewriter.replaceOp(op, res.getResult());
     return success();
   }
 };
@@ -373,10 +373,10 @@ public:
       Value qubitArg = en.value();
 
       if (en.value().isa<QASM::QubitType>()) {
-        auto driveChannel = rewriter.getType<pulse::DriveChannel>();
-        auto controlChannel = rewriter.getType<pulse::ControlChannel>();
-        auto measureChannel = rewriter.getType<pulse::MeasureChannel>();
-        auto acquireChannel = rewriter.getType<pulse::AcquireChannel>();
+        auto driveChannel = rewriter.getType<pulse::DriveChannelType>();
+        auto controlChannel = rewriter.getType<pulse::ControlChannelType>();
+        auto measureChannel = rewriter.getType<pulse::MeasureChannelType>();
+        auto acquireChannel = rewriter.getType<pulse::AcquireChannelType>();
 
         inputs.addInputs(argIndex, driveChannel);
         inputs.addInputs(argIndex + 1, controlChannel);
@@ -656,7 +656,7 @@ public:
 //   }
 // };
 
-void populateQASMToQuantumConversionPatterns(
+void populateQASMToPulseConversionPatterns(
     QASMTypeConverter &typeConverter, QubitMap &qubitMap,
     OwningRewritePatternList &patterns) {
   // clang-format off
