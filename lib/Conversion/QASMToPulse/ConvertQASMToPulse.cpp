@@ -14,17 +14,17 @@ using namespace mlir;
 
 class QubitMap {
   [[maybe_unused]] MLIRContext *ctx;
-  llvm::StringMap<DenseMap<Value, std::vector<Value, Value, Value, Value>>> mapping;
+  llvm::StringMap<DenseMap<Value, std::vector<Value>>> mapping;
 
 public:
   QubitMap(MLIRContext *ctx)
       : ctx(ctx), mapping() {}
       
-  void setMapping(FuncOp func, Value qubit, std::vector<Value, Value, Value, Value> channels) {
+  void setMapping(FuncOp func, Value qubit, std::vector<Value> channels) {
     mapping[func.getName()][qubit] = channels;
   }
 
-  std::vector<Value, Value, Value, Value> resolveQubit(FuncOp func, Value qubit) {
+  std::vector<Value> resolveQubit(FuncOp func, Value qubit) {
     return mapping[func.getName()][qubit];
   }
 };
@@ -83,7 +83,7 @@ public:
       },
       ValueRange{}
     );
-    std::vector<Value, Value, Value, Value> results = {
+    std::vector<Value> results = {
       initChannelsOp.getResult(0),
       initChannelsOp.getResult(1),
       initChannelsOp.getResult(2),
@@ -383,7 +383,7 @@ public:
         inputs.addInputs(argIndex + 2, measureChannel);
         inputs.addInputs(argIndex + 3, acquireChannel);
 
-        std::vector<Value, Value, Value, Value> channelValues = {
+        std::vector<Value> channelValues = {
           rewriter.create<pulse::DriveChannelOp>(funcOp->getLoc()),
           rewriter.create<pulse::ControlChannelOp>(funcOp->getLoc()),
           rewriter.create<pulse::MeasureChannelOp>(funcOp->getLoc()),
