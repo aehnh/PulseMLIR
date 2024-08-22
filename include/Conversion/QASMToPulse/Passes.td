@@ -10,8 +10,7 @@ def QASMToPulsePass : Pass<"convert-qasm-to-pulse", "ModuleOp"> {
                            "pulse::PulseDialect",
                            "StandardOpsDialect",
                            "AffineDialect",
-                           "scf::SCFDialect",
-                           "arith::ArithDialect"];
+                           "scf::SCFDialect"];
 }
 
 #endif // CONVERSION_QASMTOPULSE_PASSES_TD

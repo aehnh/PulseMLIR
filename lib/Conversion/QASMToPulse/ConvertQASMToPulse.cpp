@@ -1,6 +1,5 @@
 #include "mlir/Dialect/Affine/IR/AffineOps.h"
 #include "mlir/Dialect/SCF/SCF.h"
-#include "mlir/Dialect/Arith/IR/Arith.h"
 #include "mlir/Dialect/StandardOps/IR/Ops.h"
 #include "mlir/Transforms/DialectConversion.h"
 
@@ -126,14 +125,14 @@ public:
     auto acquireChannel = channels[3];
     auto loc = op->getLoc();
 
-    auto dur = rewriter.create<arith::ConstantOp>(loc, rewriter.getI32IntegerAttr(1472));
-    auto sig = rewriter.create<arith::ConstantOp>(loc, rewriter.getI32IntegerAttr(64));
-    auto width = rewriter.create<arith::ConstantOp>(loc, rewriter.getI32IntegerAttr(1216));
-    auto amp = rewriter.create<arith::ConstantOp>(loc, rewriter.getF64FloatAttr(0.23564));
-    auto angle = rewriter.create<arith::ConstantOp>(loc, rewriter.getF64FloatAttr(-1.9104095842958464));
+    auto dur = rewriter.create<ConstantOp>(loc, rewriter.getI32IntegerAttr(1472));
+    auto sig = rewriter.create<ConstantOp>(loc, rewriter.getI32IntegerAttr(64));
+    auto width = rewriter.create<ConstantOp>(loc, rewriter.getI32IntegerAttr(1216));
+    auto amp = rewriter.create<ConstantOp>(loc, rewriter.getF64FloatAttr(0.23564));
+    auto angle = rewriter.create<ConstantOp>(loc, rewriter.getF64FloatAttr(-1.9104095842958464));
     auto wav = rewriter.create<pulse::GaussianSquareOp>(loc, pulse::WaveformType, dur, sig, width, amp, angle);
     rewriter.create<pulse::PlayOp>(loc, wav, measureChannel);
-    auto dur1 = rewriter.create<arith::ConstantOp>(loc, rewriter.getI32IntegerAttr(1568));
+    auto dur1 = rewriter.create<ConstantOp>(loc, rewriter.getI32IntegerAttr(1568));
     rewriter.create<pulse::DelayOp>(loc, dur1, measureChannel);
     auto res = rewriter.create<pulse::AcquireOp>(loc, rewriter.getI1Type(), dur, acquireChannel);
 
@@ -168,14 +167,14 @@ public:
     auto acquireChannel = channels[3];
     auto loc = op->getLoc();
 
-    auto dur = rewriter.create<arith::ConstantOp>(loc, rewriter.getI32IntegerAttr(1472));
-    auto sig = rewriter.create<arith::ConstantOp>(loc, rewriter.getI32IntegerAttr(64));
-    auto width = rewriter.create<arith::ConstantOp>(loc, rewriter.getI32IntegerAttr(1216));
-    auto amp = rewriter.create<arith::ConstantOp>(loc, rewriter.getF64FloatAttr(0.23564));
-    auto angle = rewriter.create<arith::ConstantOp>(loc, rewriter.getF64FloatAttr(-1.9104095842958464));
+    auto dur = rewriter.create<ConstantOp>(loc, rewriter.getI32IntegerAttr(1472));
+    auto sig = rewriter.create<ConstantOp>(loc, rewriter.getI32IntegerAttr(64));
+    auto width = rewriter.create<ConstantOp>(loc, rewriter.getI32IntegerAttr(1216));
+    auto amp = rewriter.create<ConstantOp>(loc, rewriter.getF64FloatAttr(0.23564));
+    auto angle = rewriter.create<ConstantOp>(loc, rewriter.getF64FloatAttr(-1.9104095842958464));
     auto wav = rewriter.create<pulse::GaussianSquareOp>(loc, pulse::WaveformType, dur, sig, width, amp, angle);
     rewriter.create<pulse::PlayOp>(loc, wav, measureChannel);
-    auto dur1 = rewriter.create<arith::ConstantOp>(loc, rewriter.getI32IntegerAttr(1568));
+    auto dur1 = rewriter.create<ConstantOp>(loc, rewriter.getI32IntegerAttr(1568));
     rewriter.create<pulse::DelayOp>(loc, dur1, measureChannel);
     auto res = rewriter.create<pulse::AcquireOp>(loc, rewriter.getI1Type(), dur, acquireChannel);
 
@@ -205,7 +204,7 @@ public:
 
 /// qasm.U(%theta : f*, %phi : f*, %lambda : f*) %q0
 /// [[to]]
-/// %pha = arith.negf %lambda : f64
+/// %pha = negf %lambda : f64
 /// pulse.shift_phase(%pha, %dc0) : (f64, !pulse.drive_channel)
 /// %dur = constant 160 : i32
 /// %sig = constant 40 : i32
@@ -214,15 +213,15 @@ public:
 /// %angle = constant -0.003949372005175009 : f64
 /// %wav = pulse.drag(%dur, %sig, %beta, %amp, %angle) : (i32, i32, f64, f64, f64) -> !pulse.waveform
 /// pulse.play(%wav, %dc0) : (!pulse.waveform, !pulse.drive_channel)
-/// %tmp = arith.negf %theta : f64
+/// %tmp = negf %theta : f64
 /// %tmp1 = constant 3.14159265358979 : f64
-/// %pha1 = arith.subf %tmp, %tmp1 : f64
+/// %pha1 = subf %tmp, %tmp1 : f64
 /// pulse.shift_phase(%pha1, %dc0) : (f64, !pulse.drive_channel)
 /// %wav1 = pulse.drag(%dur, %sig, %beta, %amp, %angle) : (i32, i32, f64, f64, f64) -> !pulse.waveform
 /// pulse.play(%wav1, %dc0) : (!pulse.waveform, !pulse.drive_channel)
-/// %tmp2 = arith.negf %phi : f64
+/// %tmp2 = negf %phi : f64
 /// %tmp3 = constant 9.42477796076938 : f64
-/// %pha2 = arith.subf %tmp2, %tmp3 : f64
+/// %pha2 = subf %tmp2, %tmp3 : f64
 /// pulse.shift_phase(%pha2, %dc0) : (f64, !pulse.drive_channel)
 class SingleQubitRotationOpConversion
     : public QASMOpToPulseConversionPattern<QASM::SingleQubitRotationOp> {
@@ -237,24 +236,24 @@ public:
     auto driveChannel = channels[0];
     auto loc = op->getLoc();
 
-    auto pha = rewriter.create<arith::NegFOp>(loc, args.lambda());
+    auto pha = rewriter.create<NegFOp>(loc, args.lambda());
     rewriter.create<pulse::ShiftPhaseOp>(loc, pha, driveChannel);
-    auto dur = rewriter.create<arith::ConstantOp>(loc, rewriter.getI32IntegerAttr(160));
-    auto sig = rewriter.create<arith::ConstantOp>(loc, rewriter.getI32IntegerAttr(40));
-    auto beta = rewriter.create<arith::ConstantOp>(loc, rewriter.getF64FloatAttr(0.7190255528759942));
-    auto amp = rewriter.create<arith::ConstantOp>(loc, rewriter.getF64FloatAttr(0.08981286442437861));
-    auto angle = rewriter.create<arith::ConstantOp>(loc, rewriter.getF64FloatAttr(-0.003949372005175009));
+    auto dur = rewriter.create<ConstantOp>(loc, rewriter.getI32IntegerAttr(160));
+    auto sig = rewriter.create<ConstantOp>(loc, rewriter.getI32IntegerAttr(40));
+    auto beta = rewriter.create<ConstantOp>(loc, rewriter.getF64FloatAttr(0.7190255528759942));
+    auto amp = rewriter.create<ConstantOp>(loc, rewriter.getF64FloatAttr(0.08981286442437861));
+    auto angle = rewriter.create<ConstantOp>(loc, rewriter.getF64FloatAttr(-0.003949372005175009));
     auto wav = rewriter.create<pulse::DragOp>(loc, dur, sig, beta, amp, angle);
     rewriter.create<pulse::PlayOp>(loc, wav, driveChannel);
-    auto tmp = rewriter.create<arith::NegFOp>(loc, args.theta());
-    auto tmp1 = rewriter.create<arith::ConstantOp>(loc, rewriter.getF64FloatAttr(3.14159265358979));
-    auto pha1 = rewriter.create<arith::SubFOp>(loc, tmp, tmp1);
+    auto tmp = rewriter.create<NegFOp>(loc, args.theta());
+    auto tmp1 = rewriter.create<ConstantOp>(loc, rewriter.getF64FloatAttr(3.14159265358979));
+    auto pha1 = rewriter.create<SubFOp>(loc, tmp, tmp1);
     rewriter.create<pulse::ShiftPhaseOp>(loc, pha1, driveChannel);
     auto wav1 = rewriter.create<pulse::DragOp>(loc, dur, sig, beta, amp, angle);
     rewriter.create<pulse::PlayOp>(loc, wav1, driveChannel);
-    auto tmp2 = rewriter.create<arith::NegFOp>(loc, args.phi());
-    auto tmp3 = rewriter.create<arith::ConstantOp>(loc, rewriter.getF64FloatAttr(9.42477796076938));
-    auto pha2 = rewriter.create<arith::SubFOp>(loc, tmp2, tmp3);
+    auto tmp2 = rewriter.create<NegFOp>(loc, args.phi());
+    auto tmp3 = rewriter.create<ConstantOp>(loc, rewriter.getF64FloatAttr(9.42477796076938));
+    auto pha2 = rewriter.create<SubFOp>(loc, tmp2, tmp3);
     rewriter.create<pulse::ShiftPhaseOp>(loc, pha2, driveChannel);
 
     rewriter.eraseOp(op);
@@ -316,39 +315,39 @@ public:
     auto cc1 = targ_channels[1];
     auto loc = op->getLoc();
 
-    auto pha = rewriter.create<arith::ConstantOp>(loc, rewriter.getF64FloatAttr(1.5707963267948966));
+    auto pha = rewriter.create<ConstantOp>(loc, rewriter.getF64FloatAttr(1.5707963267948966));
     rewriter.create<pulse::ShiftPhaseOp>(loc, pha, dc0);
     rewriter.create<pulse::ShiftPhaseOp>(loc, pha, cc1);
-    auto dur = rewriter.create<arith::ConstantOp>(loc, rewriter.getI32IntegerAttr(160));
-    auto sigma = rewriter.create<arith::ConstantOp>(loc, rewriter.getI32IntegerAttr(40));
-    auto beta = rewriter.create<arith::ConstantOp>(loc, rewriter.getF64FloatAttr(0.7171287840008055));
-    auto amp = rewriter.create<arith::ConstantOp>(loc, rewriter.getF64FloatAttr(0.1797336637124058));
-    auto angle = rewriter.create<arith::ConstantOp>(loc, rewriter.getF64FloatAttr(-1.5707963267948968));
+    auto dur = rewriter.create<ConstantOp>(loc, rewriter.getI32IntegerAttr(160));
+    auto sigma = rewriter.create<ConstantOp>(loc, rewriter.getI32IntegerAttr(40));
+    auto beta = rewriter.create<ConstantOp>(loc, rewriter.getF64FloatAttr(0.7171287840008055));
+    auto amp = rewriter.create<ConstantOp>(loc, rewriter.getF64FloatAttr(0.1797336637124058));
+    auto angle = rewriter.create<ConstantOp>(loc, rewriter.getF64FloatAttr(-1.5707963267948968));
     auto wav = rewriter.create<pulse::DragOp>(loc, dur, sigma, beta, amp, angle);
     rewriter.create<pulse::PlayOp>(loc, wav, dc0);
-    auto beta2 = rewriter.create<arith::ConstantOp>(loc, rewriter.getF64FloatAttr(-0.6677267548609104));
-    auto amp2 = rewriter.create<arith::ConstantOp>(loc, rewriter.getF64FloatAttr(0.08451179589418657));
-    auto angle2 = rewriter.create<arith::ConstantOp>(loc, rewriter.getF64FloatAttr(0.00495799629351078));
+    auto beta2 = rewriter.create<ConstantOp>(loc, rewriter.getF64FloatAttr(-0.6677267548609104));
+    auto amp2 = rewriter.create<ConstantOp>(loc, rewriter.getF64FloatAttr(0.08451179589418657));
+    auto angle2 = rewriter.create<ConstantOp>(loc, rewriter.getF64FloatAttr(0.00495799629351078));
     auto wav2 = rewriter.create<pulse::DragOp>(loc, dur, sigma, beta2, amp2, angle2);
     rewriter.create<pulse::PlayOp>(loc, wav2, dc1);
-    auto dur3 = rewriter.create<arith::ConstantOp>(loc, rewriter.getI32IntegerAttr(512));
-    auto sigma3 = rewriter.create<arith::ConstantOp>(loc, rewriter.getI32IntegerAttr(64));
-    auto width3 = rewriter.create<arith::ConstantOp>(loc, rewriter.getI32IntegerAttr(256));
-    auto amp3 = rewriter.create<arith::ConstantOp>(loc, rewriter.getF64FloatAttr(0.06111098055028464));
-    auto angle3 = rewriter.create<arith::ConstantOp>(loc, rewriter.getF64FloatAttr(0.0002906564659721502));
+    auto dur3 = rewriter.create<ConstantOp>(loc, rewriter.getI32IntegerAttr(512));
+    auto sigma3 = rewriter.create<ConstantOp>(loc, rewriter.getI32IntegerAttr(64));
+    auto width3 = rewriter.create<ConstantOp>(loc, rewriter.getI32IntegerAttr(256));
+    auto amp3 = rewriter.create<ConstantOp>(loc, rewriter.getF64FloatAttr(0.06111098055028464));
+    auto angle3 = rewriter.create<ConstantOp>(loc, rewriter.getF64FloatAttr(0.0002906564659721502));
     auto wav3 = rewriter.create<pulse::GaussianSquareOp>(loc, dur3, sigma3, width3, amp3, angle3);
     rewriter.create<pulse::PlayOp>(loc, wav3, dc1);
-    auto amp4 = rewriter.create<arith::ConstantOp>(loc, rewriter.getF64FloatAttr(0.39758741702842126));
-    auto angle4 = rewriter.create<arith::ConstantOp>(loc, rewriter.getF64FloatAttr(-2.179855933078848));
+    auto amp4 = rewriter.create<ConstantOp>(loc, rewriter.getF64FloatAttr(0.39758741702842126));
+    auto angle4 = rewriter.create<ConstantOp>(loc, rewriter.getF64FloatAttr(-2.179855933078848));
     auto wav4 = rewriter.create<pulse::GaussianSquareOp>(loc, dur3, sigma3, width3, amp4, angle4);
     rewriter.create<pulse::PlayOp>(loc, wav4, cc0);
-    auto angle5 = rewriter.create<arith::ConstantOp>(loc, rewriter.getF64FloatAttr(0.0));
+    auto angle5 = rewriter.create<ConstantOp>(loc, rewriter.getF64FloatAttr(0.0));
     auto wav5 = rewriter.create<pulse::DragOp>(loc, dur, sigma, beta, amp, angle5);
     rewriter.create<pulse::PlayOp>(loc, wav5, dc0);
-    auto angle6 = rewriter.create<arith::ConstantOp>(loc, rewriter.getF64FloatAttr(-3.141301997123821));
+    auto angle6 = rewriter.create<ConstantOp>(loc, rewriter.getF64FloatAttr(-3.141301997123821));
     auto wav6 = rewriter.create<pulse::GaussianSquareOp>(loc, dur3, sigma3, width3, amp3, angle6);
     rewriter.create<pulse::PlayOp>(loc, wav6, dc1);
-    auto angle7 = rewriter.create<arith::ConstantOp>(loc, rewriter.getF64FloatAttr(0.9617367205109453));
+    auto angle7 = rewriter.create<ConstantOp>(loc, rewriter.getF64FloatAttr(0.9617367205109453));
     auto wav7 = rewriter.create<pulse::GaussianSquareOp>(loc, dur3, sigma3, width3, amp4, angle7);
     rewriter.create<pulse::PlayOp>(loc, wav7, cc0);
 
@@ -492,85 +491,85 @@ public:
 
     // currently supported: x, y, z, s, sdg, t, tdg, rx, ry, rz
     if (gateOp.gate_name() == "x") {
-      auto dur = rewriter.create<arith::ConstantOp>(loc, rewriter.getI32IntegerAttr(160));
-      auto sigma = rewriter.create<arith::ConstantOp>(loc, rewriter.getI32IntegerAttr(40));
-      auto beta = rewriter.create<arith::ConstantOp>(loc, rewriter.getF64FloatAttr(0.7171287840008055));
-      auto amp = rewriter.create<arith::ConstantOp>(loc, rewriter.getF64FloatAttr(0.1797336637124058));
-      auto angle = rewriter.create<arith::ConstantOp>(loc, rewriter.getF64FloatAttr(0.0));
+      auto dur = rewriter.create<ConstantOp>(loc, rewriter.getI32IntegerAttr(160));
+      auto sigma = rewriter.create<ConstantOp>(loc, rewriter.getI32IntegerAttr(40));
+      auto beta = rewriter.create<ConstantOp>(loc, rewriter.getF64FloatAttr(0.7171287840008055));
+      auto amp = rewriter.create<ConstantOp>(loc, rewriter.getF64FloatAttr(0.1797336637124058));
+      auto angle = rewriter.create<ConstantOp>(loc, rewriter.getF64FloatAttr(0.0));
       auto wav = rewriter.create<pulse::DragOp>(loc, dur, sigma, beta, amp, angle);
       rewriter.create<pulse::PlayOp>(loc, wav, dc0);
     } else if (gateOp.gate_name() == "y") {
-      auto pha = rewriter.create<arith::ConstantOp>(loc, rewriter.getF64FloatAttr(-3.1415926536));
+      auto pha = rewriter.create<ConstantOp>(loc, rewriter.getF64FloatAttr(-3.1415926536));
       rewriter.create<pulse::ShiftPhaseOp>(loc, pha, dc0);
-      auto dur = rewriter.create<arith::ConstantOp>(loc, rewriter.getI32IntegerAttr(160));
-      auto sigma = rewriter.create<arith::ConstantOp>(loc, rewriter.getI32IntegerAttr(40));
-      auto beta = rewriter.create<arith::ConstantOp>(loc, rewriter.getF64FloatAttr(0.7171287840008055));
-      auto amp = rewriter.create<arith::ConstantOp>(loc, rewriter.getF64FloatAttr(0.1797336637124058));
-      auto angle = rewriter.create<arith::ConstantOp>(loc, rewriter.getF64FloatAttr(0.0));
+      auto dur = rewriter.create<ConstantOp>(loc, rewriter.getI32IntegerAttr(160));
+      auto sigma = rewriter.create<ConstantOp>(loc, rewriter.getI32IntegerAttr(40));
+      auto beta = rewriter.create<ConstantOp>(loc, rewriter.getF64FloatAttr(0.7171287840008055));
+      auto amp = rewriter.create<ConstantOp>(loc, rewriter.getF64FloatAttr(0.1797336637124058));
+      auto angle = rewriter.create<ConstantOp>(loc, rewriter.getF64FloatAttr(0.0));
       auto wav = rewriter.create<pulse::DragOp>(loc, dur, sigma, beta, amp, angle);
       rewriter.create<pulse::PlayOp>(loc, wav, dc0);
     } else if (gateOp.gate_name() == "z") {
-      auto pha = rewriter.create<arith::ConstantOp>(loc, rewriter.getF64FloatAttr(-3.1415926536));
+      auto pha = rewriter.create<ConstantOp>(loc, rewriter.getF64FloatAttr(-3.1415926536));
       rewriter.create<pulse::ShiftPhaseOp>(loc, pha, dc0);
     } else if (gateOp.gate_name() == "h") {
-      auto pha = rewriter.create<arith::ConstantOp>(loc, rewriter.getF64FloatAttr(-1.5707963268));
+      auto pha = rewriter.create<ConstantOp>(loc, rewriter.getF64FloatAttr(-1.5707963268));
       rewriter.create<pulse::ShiftPhaseOp>(loc, pha, dc0);
-      auto dur = rewriter.create<arith::ConstantOp>(loc, rewriter.getI32IntegerAttr(160));
-      auto sigma = rewriter.create<arith::ConstantOp>(loc, rewriter.getI32IntegerAttr(40));
-      auto beta = rewriter.create<arith::ConstantOp>(loc, rewriter.getF64FloatAttr(0.7190255528759942));
-      auto amp = rewriter.create<arith::ConstantOp>(loc, rewriter.getF64FloatAttr(0.08981286442437861));
-      auto angle = rewriter.create<arith::ConstantOp>(loc, rewriter.getF64FloatAttr(-0.003949372005175009));
+      auto dur = rewriter.create<ConstantOp>(loc, rewriter.getI32IntegerAttr(160));
+      auto sigma = rewriter.create<ConstantOp>(loc, rewriter.getI32IntegerAttr(40));
+      auto beta = rewriter.create<ConstantOp>(loc, rewriter.getF64FloatAttr(0.7190255528759942));
+      auto amp = rewriter.create<ConstantOp>(loc, rewriter.getF64FloatAttr(0.08981286442437861));
+      auto angle = rewriter.create<ConstantOp>(loc, rewriter.getF64FloatAttr(-0.003949372005175009));
       auto wav = rewriter.create<pulse::DragOp>(loc, dur, sigma, beta, amp, angle);
       rewriter.create<pulse::PlayOp>(loc, wav, dc0);
       rewriter.create<pulse::ShiftPhaseOp>(loc, pha, dc0);
     } else if (gateOp.gate_name() == "s") {
-      auto pha = rewriter.create<arith::ConstantOp>(loc, rewriter.getF64FloatAttr(-1.5707963268));
+      auto pha = rewriter.create<ConstantOp>(loc, rewriter.getF64FloatAttr(-1.5707963268));
       rewriter.create<pulse::ShiftPhaseOp>(loc, pha, dc0);
     } else if (gateOp.gate_name() == "sdg") {
-      auto pha = rewriter.create<arith::ConstantOp>(loc, rewriter.getF64FloatAttr(1.5707963268));
+      auto pha = rewriter.create<ConstantOp>(loc, rewriter.getF64FloatAttr(1.5707963268));
       rewriter.create<pulse::ShiftPhaseOp>(loc, pha, dc0);
     } else if (gateOp.gate_name() == "t") {
-      auto pha = rewriter.create<arith::ConstantOp>(loc, rewriter.getF64FloatAttr(-0.7853981634));
+      auto pha = rewriter.create<ConstantOp>(loc, rewriter.getF64FloatAttr(-0.7853981634));
       rewriter.create<pulse::ShiftPhaseOp>(loc, pha, dc0);
     } else if (gateOp.gate_name() == "tdg") {
-      auto pha = rewriter.create<arith::ConstantOp>(loc, rewriter.getF64FloatAttr(0.7853981634));
+      auto pha = rewriter.create<ConstantOp>(loc, rewriter.getF64FloatAttr(0.7853981634));
       rewriter.create<pulse::ShiftPhaseOp>(loc, pha, dc0);
     } else if (gateOp.gate_name() == "rx") {
-      auto pha = rewriter.create<arith::ConstantOp>(loc, rewriter.getF64FloatAttr(-1.5707963268));
+      auto pha = rewriter.create<ConstantOp>(loc, rewriter.getF64FloatAttr(-1.5707963268));
       rewriter.create<pulse::ShiftPhaseOp>(loc, pha, dc0);
-      auto dur = rewriter.create<arith::ConstantOp>(loc, rewriter.getI32IntegerAttr(160));
-      auto sigma = rewriter.create<arith::ConstantOp>(loc, rewriter.getI32IntegerAttr(40));
-      auto beta = rewriter.create<arith::ConstantOp>(loc, rewriter.getF64FloatAttr(0.7190255528759942));
-      auto amp = rewriter.create<arith::ConstantOp>(loc, rewriter.getF64FloatAttr(0.08981286442437861));
-      auto angle = rewriter.create<arith::ConstantOp>(loc, rewriter.getF64FloatAttr(-0.003949372005175009));
+      auto dur = rewriter.create<ConstantOp>(loc, rewriter.getI32IntegerAttr(160));
+      auto sigma = rewriter.create<ConstantOp>(loc, rewriter.getI32IntegerAttr(40));
+      auto beta = rewriter.create<ConstantOp>(loc, rewriter.getF64FloatAttr(0.7190255528759942));
+      auto amp = rewriter.create<ConstantOp>(loc, rewriter.getF64FloatAttr(0.08981286442437861));
+      auto angle = rewriter.create<ConstantOp>(loc, rewriter.getF64FloatAttr(-0.003949372005175009));
       auto wav = rewriter.create<pulse::DragOp>(loc, dur, sigma, beta, amp, angle);
       rewriter.create<pulse::PlayOp>(loc, wav, dc0);
-      auto tmp = rewriter.create<arith::NegFOp>(loc, alpha);
-      auto tmp1 = rewriter.create<arith::ConstantOp>(loc, rewriter.getF64FloatAttr(3.14159265358979));
-      auto pha1 = rewriter.create<arith::SubFOp>(loc, tmp, tmp1);
+      auto tmp = rewriter.create<NegFOp>(loc, alpha);
+      auto tmp1 = rewriter.create<ConstantOp>(loc, rewriter.getF64FloatAttr(3.14159265358979));
+      auto pha1 = rewriter.create<SubFOp>(loc, tmp, tmp1);
       rewriter.create<pulse::ShiftPhaseOp>(loc, pha1, dc0);
       rewriter.create<pulse::PlayOp>(loc, wav, dc0);
-      auto pha2 = rewriter.create<arith::ConstantOp>(loc, rewriter.getF64FloatAttr(-7.853981634));
+      auto pha2 = rewriter.create<ConstantOp>(loc, rewriter.getF64FloatAttr(-7.853981634));
       rewriter.create<pulse::ShiftPhaseOp>(loc, pha2, dc0);
     } else if (gateOp.gate_name() == "ry") {
-      auto pha = rewriter.create<arith::ConstantOp>(loc, rewriter.getF64FloatAttr(0.0));
+      auto pha = rewriter.create<ConstantOp>(loc, rewriter.getF64FloatAttr(0.0));
       rewriter.create<pulse::ShiftPhaseOp>(loc, pha, dc0);
-      auto dur = rewriter.create<arith::ConstantOp>(loc, rewriter.getI32IntegerAttr(160));
-      auto sigma = rewriter.create<arith::ConstantOp>(loc, rewriter.getI32IntegerAttr(40));
-      auto beta = rewriter.create<arith::ConstantOp>(loc, rewriter.getF64FloatAttr(0.7190255528759942));
-      auto amp = rewriter.create<arith::ConstantOp>(loc, rewriter.getF64FloatAttr(0.08981286442437861));
-      auto angle = rewriter.create<arith::ConstantOp>(loc, rewriter.getF64FloatAttr(-0.003949372005175009));
+      auto dur = rewriter.create<ConstantOp>(loc, rewriter.getI32IntegerAttr(160));
+      auto sigma = rewriter.create<ConstantOp>(loc, rewriter.getI32IntegerAttr(40));
+      auto beta = rewriter.create<ConstantOp>(loc, rewriter.getF64FloatAttr(0.7190255528759942));
+      auto amp = rewriter.create<ConstantOp>(loc, rewriter.getF64FloatAttr(0.08981286442437861));
+      auto angle = rewriter.create<ConstantOp>(loc, rewriter.getF64FloatAttr(-0.003949372005175009));
       auto wav = rewriter.create<pulse::DragOp>(loc, dur, sigma, beta, amp, angle);
       rewriter.create<pulse::PlayOp>(loc, wav, dc0);
-      auto tmp = rewriter.create<arith::NegFOp>(loc, alpha);
-      auto tmp1 = rewriter.create<arith::ConstantOp>(loc, rewriter.getF64FloatAttr(3.14159265358979));
-      auto pha1 = rewriter.create<arith::SubFOp>(loc, tmp, tmp1);
+      auto tmp = rewriter.create<NegFOp>(loc, alpha);
+      auto tmp1 = rewriter.create<ConstantOp>(loc, rewriter.getF64FloatAttr(3.14159265358979));
+      auto pha1 = rewriter.create<SubFOp>(loc, tmp, tmp1);
       rewriter.create<pulse::ShiftPhaseOp>(loc, pha1, dc0);
       rewriter.create<pulse::PlayOp>(loc, wav, dc0);
-      auto pha2 = rewriter.create<arith::ConstantOp>(loc, rewriter.getF64FloatAttr(-9.4247779608));
+      auto pha2 = rewriter.create<ConstantOp>(loc, rewriter.getF64FloatAttr(-9.4247779608));
       rewriter.create<pulse::ShiftPhaseOp>(loc, pha2, dc0);
     } else if (gateOp.gate_name() == "rz") {
-      auto pha = rewriter.create<arith::NegFOp>(loc, alpha);
+      auto pha = rewriter.create<NegFOp>(loc, alpha);
       rewriter.create<pulse::ShiftPhaseOp>(loc, pha, dc0);
     } else {
       // generate new call
