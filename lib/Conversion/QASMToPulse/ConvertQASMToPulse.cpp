@@ -20,7 +20,7 @@ public:
   QubitMap(MLIRContext *ctx)
       : ctx(ctx), mapping() {}
       
-  void setMapping(FuncOp func, Value qubit, std::vector channels) {
+  void setMapping(FuncOp func, Value qubit, std::vector<Value> channels) {
     mapping[func.getName()][qubit] = channels;
   }
 
@@ -83,7 +83,7 @@ public:
       },
       ValueRange{}
     );
-    std::vector results = {
+    std::vector<Value> results = {
       initChannelsOp.getResult(0),
       initChannelsOp.getResult(1),
       initChannelsOp.getResult(2),
