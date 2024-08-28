@@ -589,11 +589,8 @@ public:
       auto pha = rewriter.create<NegFOp>(loc, alpha);
       rewriter.create<pulse::ShiftPhaseOp>(loc, pha, dc0);
     } else {
-      // generate new call
-      emitWarning(gateOp->getLoc())
-          << "Unknown gate call, converting to std.call instead";
-      auto newCallOp = rewriter.create<CallOp>(
-          gateOp->getLoc(), gateOp.gate_name(), TypeRange{}, arguments);
+      llvm::errs() << "Gate call not supported.\n";
+      return failure();
     }
 
     rewriter.eraseOp(gateOp);
@@ -678,7 +675,6 @@ void populateQASMToPulseConversionPatterns(
   // clang-format off
   patterns.insert<
       FuncOpConversion,
-      // ReturnOpConversion,
       CallOpConversion,
       GateCallOpConversion,
       AllocateOpConversion,
@@ -686,9 +682,7 @@ void populateQASMToPulseConversionPatterns(
       ResetOpConversion,
       BarrierOpConversion,
       SingleQubitRotationOpConversion,
-      ControlledNotOpConversion,
-      // SCFIfConversion,
-      // SCFYieldConversion
+      ControlledNotOpConversion
   >(typeConverter, &qubitMap);
   // clang-format on
 }
@@ -696,7 +690,7 @@ void populateQASMToPulseConversionPatterns(
 struct QASMToPulseTarget : public ConversionTarget {
   QASMToPulseTarget(MLIRContext &ctx) : ConversionTarget(ctx) {
     addLegalDialect<StandardOpsDialect>();
-    addLegalDialect<quantum::PulseDialect>();
+    addLegalDialect<pulse::PulseDialect>();
     addLegalDialect<AffineDialect>();
     addLegalDialect<scf::SCFDialect>();
 
