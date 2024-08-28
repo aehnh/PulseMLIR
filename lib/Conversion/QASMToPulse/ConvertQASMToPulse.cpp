@@ -339,7 +339,7 @@ public:
     auto width3 = rewriter.create<ConstantOp>(loc, rewriter.getI32IntegerAttr(256));
     auto amp3 = rewriter.create<ConstantOp>(loc, rewriter.getF64FloatAttr(0.06111098055028464));
     auto angle3 = rewriter.create<ConstantOp>(loc, rewriter.getF64FloatAttr(0.0002906564659721502));
-    auto wav3 = rewriter.create<pulse::GaussianSquareOp>(loc, waveformType, waveformType, dur3, sigma3, width3, amp3, angle3);
+    auto wav3 = rewriter.create<pulse::GaussianSquareOp>(loc, waveformType, dur3, sigma3, width3, amp3, angle3);
     rewriter.create<pulse::PlayOp>(loc, wav3, dc1);
     auto amp4 = rewriter.create<ConstantOp>(loc, rewriter.getF64FloatAttr(0.39758741702842126));
     auto angle4 = rewriter.create<ConstantOp>(loc, rewriter.getF64FloatAttr(-2.179855933078848));
