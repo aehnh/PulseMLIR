@@ -196,7 +196,7 @@ public:
     QASM::BarrierOpAdaptor args(operands);
     auto parentFuncOp = op->getParentOfType<FuncOp>();
     auto channels = qubitMap->resolveQubit(parentFuncOp, args.qinp());
-    rewriter.create<pulse::BarrierOp>(op->getLoc(), channels);
+    rewriter.create<pulse::BarrierOp>(op->getLoc(), channels[0], channels[1], channels[2], channels[3]);
     rewriter.eraseOp(op);
     return success();
   }
