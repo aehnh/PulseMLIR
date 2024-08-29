@@ -30,6 +30,7 @@ using namespace mlir;
 
 void registerExtraDialects(DialectRegistry &registry) {
   registry.insert<quantum::QuantumDialect>();
+  registry.insert<pulse::PulseDialect>();
   registry.insert<QASM::QASMDialect>();
   registry.insert<ZX::ZXDialect>();
   registry.insert<ZXGraph::ZXGraphDialect>();
@@ -40,6 +41,7 @@ void registerExtraPasses() {
 
   registerQASMToSCFConversionPasses();
   registerQASMToQuantumConversionPasses();
+  registerQASMToPulseConversionPasses();
   registerQASMAnalysisPasses();
   registerQASMTransformsPasses();
   registerQuantumToQASMConversionPasses();
