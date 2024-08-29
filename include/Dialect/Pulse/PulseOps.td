@@ -28,6 +28,7 @@ def Pulse_InitializeChannelsOp : Pulse_Op<"initialize_channels", []> {
     Pulse_AcquireChannelType:$ac
   );
   let assemblyFormat = [{ attr-dict `(` type($dc) `,` type($cc) `,` type($mc) `,` type($ac) `)` }];
+  let verifier = [{ return success(); }];
 }
 
 def Pulse_DragOp : Pulse_Op<"drag", []> {
@@ -44,6 +45,7 @@ def Pulse_DragOp : Pulse_Op<"drag", []> {
   );
   let results = (outs Pulse_WaveformType:$wav);
   let assemblyFormat = [{ attr-dict `(` $dur `,` $sig `,` $beta `,` $amp `,` $angle `)` `:` `(` type($dur) `,` type($sig) `,` type($beta) `,` type($amp) `,` type($angle) `)` `->` type($wav) }];
+  let verifier = [{ return success(); }];
 }
 
 def Pulse_GaussianSquareOp : Pulse_Op<"gaussian_square", []> {
@@ -60,6 +62,7 @@ def Pulse_GaussianSquareOp : Pulse_Op<"gaussian_square", []> {
   );
   let results = (outs Pulse_WaveformType:$wav);
   let assemblyFormat = [{ attr-dict `(` $dur `,` $sig `,` $width `,` $amp `,` $angle `)` `:` `(` type($dur) `,` type($sig) `,` type($width) `,` type($amp) `,` type($angle) `)` `->` type($wav) }];
+  let verifier = [{ return success(); }];
 }
 
 def Pulse_PlayOp : Pulse_Op<"play", []> {
@@ -72,6 +75,7 @@ def Pulse_PlayOp : Pulse_Op<"play", []> {
     TransmitChannel:$cha
   );
   let assemblyFormat = [{ attr-dict `(` $wav `,` $cha `)` `:` `(` type($wav) `,` type($cha) `)` }];
+  let verifier = [{ return success(); }];
 }
 
 def Pulse_DelayOp : Pulse_Op<"delay", []> {
@@ -84,6 +88,7 @@ def Pulse_DelayOp : Pulse_Op<"delay", []> {
     TransmitChannel:$cha
   );
   let assemblyFormat = [{ attr-dict `(` $dur `,` $cha `)` `:` `(` type($dur) `,` type($cha) `)` }];
+  let verifier = [{ return success(); }];
 }
 
 def Pulse_AcquireOp : Pulse_Op<"acquire", []> {
@@ -97,6 +102,7 @@ def Pulse_AcquireOp : Pulse_Op<"acquire", []> {
   );
   let results = (outs I1:$res);
   let assemblyFormat = [{ attr-dict `(` $dur `,` $cha `)` `:` `(` type($dur) `,` type($cha) `)` }];
+  let verifier = [{ return success(); }];
 }
 
 def Pulse_ShiftPhaseOp : Pulse_Op<"shift_phase", []> {
@@ -109,6 +115,7 @@ def Pulse_ShiftPhaseOp : Pulse_Op<"shift_phase", []> {
     TransmitChannel:$cha
   );
   let assemblyFormat = [{ attr-dict `(` $phase `,` $cha `)` `:` `(` type($phase) `,` type($cha) `)` }];
+  let verifier = [{ return success(); }];
 }
 
 def Pulse_BarrierOp : Pulse_Op<"barrier", []> {
@@ -123,6 +130,7 @@ def Pulse_BarrierOp : Pulse_Op<"barrier", []> {
     Pulse_AcquireChannelType:$ac
   );
   let assemblyFormat = [{ attr-dict `(` $dc `,` $cc `,` $mc `,` $ac `)` }];
+  let verifier = [{ return success(); }];
 }
 
 #endif // PULSE_OPS
