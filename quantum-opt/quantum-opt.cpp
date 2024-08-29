@@ -12,6 +12,7 @@
 #include "mlir/Support/MlirOptMain.h"
 
 #include "Conversion/QASMToQuantum/Passes.h"
+#include "Conversion/QASMToPulse/Passes.h"
 #include "Conversion/QASMToSCF/Passes.h"
 #include "Conversion/QuantumToLLVM/Passes.h"
 #include "Conversion/QuantumToQASM/Passes.h"
@@ -21,6 +22,7 @@
 #include "Dialect/QASM/Transforms/Passes.h"
 #include "Dialect/Quantum/Passes.h"
 #include "Dialect/Quantum/QuantumDialect.h"
+#include "Dialect/Pulse/PulseDialect.h"
 #include "Dialect/ZX/Transforms/Passes.h"
 #include "Dialect/ZX/ZXDialect.h"
 #include "Dialect/ZXGraph/Transforms/Passes.h"
