@@ -22,9 +22,6 @@ def Pulse_Dialect : Dialect {
         A WIP Pulse dialect for MLIR targeting superconducting quantum computers.
     }];
     let cppNamespace = "::mlir::pulse";
-
-    // let useDefaultAttributePrinterParser = 1;
-    // let useDefaultTypePrinterParser = 1;
 }
 
 //===----------------------------------------------------------------------===//
@@ -32,7 +29,18 @@ def Pulse_Dialect : Dialect {
 //===----------------------------------------------------------------------===//
 
 class Pulse_Op<string mnemonic, list<OpTrait> traits = []> :
-        Op<Pulse_Dialect, mnemonic, traits> {}
+        Op<Pulse_Dialect, mnemonic, traits> {
+    
+    // For each op, the following static functions need to be defined
+    //
+    // * static ParseResult parse<op-c++-class-name>(OpAsmParser &parser,
+    //                                               OperationState &state);
+    // * static void print(OpAsmPrinter &p, <op-c++-class-name> op)
+    // * static LogicalResult verify(<op-c++-class-name> op)
+    let parser = [{ return ::parse$cppClass(parser, result); }];
+    let printer = [{ ::print(*this, p); }];
+    let verifier = [{ return ::verify(*this); }];
+}
 
 class Pulse_Type<string name> : TypeDef<Pulse_Dialect, name> {}
 
