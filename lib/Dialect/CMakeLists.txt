@@ -1,4 +1,5 @@
 add_subdirectory(Quantum)
+add_subdirectory(Pulse)
 add_subdirectory(QASM)
 add_subdirectory(ZX)
 add_subdirectory(ZXGraph)
