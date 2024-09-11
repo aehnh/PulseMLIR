@@ -32,8 +32,6 @@ RUN cmake -S llvm -B build -G Ninja \
     -DCMAKE_BUILD_TYPE=Release
 RUN ninja -C build install
 
-RUN echo "wtf"
-
 WORKDIR /
 RUN git clone https://github.com/aehnh/PulseMLIR.git
 
@@ -52,11 +50,11 @@ RUN cmake -G Ninja -S .. -B . \
     -DLLVM_DIR=/llvm-project/install/lib/cmake/llvm \
     -DLLVM_EXTERNAL_LIT=/llvm-project/build/bin/llvm-lit \
     -DCMAKE_BUILD_TYPE=Release
-RUN cmake --build . --target check-quantum-opt || true
+# RUN cmake --build . --target check-quantum-opt || true
 
 # convert example OpenQASM codes into QASM MLIR dialect
-WORKDIR /PulseMLIR
-RUN mkdir -p lib/Dialect/Pulse
+# WORKDIR /PulseMLIR
+# RUN mkdir -p lib/Dialect/Pulse
 
 # RUN ../llvm-project/install/bin/mlir-tblgen --gen-dialect-decls -I include -I ../llvm-project/mlir/include include/Dialect/Pulse/PulseDialect.td -o include/Dialect/Pulse/PulseDialect.h
 
@@ -68,7 +66,7 @@ RUN mkdir -p lib/Dialect/Pulse
 
 # RUN ../llvm-project/install/bin/mlir-tblgen --gen-pass-decls -I include -I ../llvm-project/mlir/include include/Conversion/QASMToPulse/Passes.td -o include/Conversion/QASMToPulse/Passes.h
 
-RUN cmake --build build --target mlir-doc
+# RUN cmake --build build --target mlir-doc
 
 # RUN pip install qiskit==0.46.1
 # RUN python3 tools/openqasm-to-mlir.py \
