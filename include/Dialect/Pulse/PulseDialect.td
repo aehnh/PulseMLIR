@@ -22,6 +22,7 @@ def Pulse_Dialect : Dialect {
         A WIP Pulse dialect for MLIR targeting superconducting quantum computers.
     }];
     let cppNamespace = "::mlir::pulse";
+    let hasConstantMaterializer = 1;
 }
 
 //===----------------------------------------------------------------------===//
