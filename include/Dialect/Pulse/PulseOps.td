@@ -98,7 +98,7 @@ def Pulse_AcquireOp : Pulse_Op<"acquire", []> {
   }];
   let arguments = (ins
     AnyInteger:$dur,
-    TransmitChannel:$cha
+    Pulse_AcquireChannelType:$cha
   );
   let results = (outs I1:$res);
   let assemblyFormat = [{ attr-dict `(` $dur `,` $cha `)` `:` `(` type($dur) `,` type($cha) `)` }];
@@ -112,9 +112,9 @@ def Pulse_ShiftPhaseOp : Pulse_Op<"shift_phase", []> {
   }];
   let arguments = (ins
     AnyFloat:$phase,
-    Pulse_AcquireChannelType:$ac
+    TransmitChannel:$cha
   );
-  let assemblyFormat = [{ attr-dict `(` $phase `,` $ac `)` `:` `(` type($phase) `,` type($ac) `)` }];
+  let assemblyFormat = [{ attr-dict `(` $phase `,` $cha `)` `:` `(` type($phase) `,` type($cha) `)` }];
   let verifier = [{ return success(); }];
 }
 
