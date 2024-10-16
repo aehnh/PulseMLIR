@@ -108,13 +108,13 @@ def Pulse_AcquireOp : Pulse_Op<"acquire", []> {
 def Pulse_ShiftPhaseOp : Pulse_Op<"shift_phase", []> {
   let summary = "Shift phase of a channel";
   let description = [{
-    pulse.shift_phase(%phase, %cha) : (f64, !pulse.drive_channel)
+    pulse.shift_phase(%phase, %cha) : (f64, !pulse.acquire_channel)
   }];
   let arguments = (ins
     AnyFloat:$phase,
-    TransmitChannel:$cha
+    Pulse_AcquireChannelType:$ac
   );
-  let assemblyFormat = [{ attr-dict `(` $phase `,` $cha `)` `:` `(` type($phase) `,` type($cha) `)` }];
+  let assemblyFormat = [{ attr-dict `(` $phase `,` $cha `)` `:` `(` type($phase) `,` type($ac) `)` }];
   let verifier = [{ return success(); }];
 }
 
