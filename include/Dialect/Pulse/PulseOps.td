@@ -101,7 +101,7 @@ def Pulse_AcquireOp : Pulse_Op<"acquire", []> {
     Pulse_AcquireChannelType:$ac
   );
   let results = (outs I1:$res);
-  let assemblyFormat = [{ attr-dict `(` $dur `,` $ac `)` }];
+  let assemblyFormat = [{ attr-dict `(` $dur `,` $ac `)` `:` `(` type($dur) `,` type($ac) `)` }];
   let verifier = [{ return success(); }];
 }
 
