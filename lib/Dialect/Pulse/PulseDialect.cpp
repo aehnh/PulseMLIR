@@ -40,3 +40,8 @@ void PulseDialect::initialize() {
       >();
   addInterfaces<PulseInlinerInterface>();
 }
+
+Operation *PulseDialect::materializeConstant(OpBuilder &builder, Attribute value,
+                                            Type type, Location loc) {
+  return builder.create<ConstantOp>(loc, type, value);
+}
