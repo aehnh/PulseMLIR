@@ -1,5 +1,6 @@
 add_mlir_dialect_library(MLIRPulse
   PulseDialect.cpp
+  PulseTypes.cpp
   PulseOps.cpp
 
   ADDITIONAL_HEADER_DIRS
