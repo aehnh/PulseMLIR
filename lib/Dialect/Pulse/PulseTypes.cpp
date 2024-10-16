@@ -8,7 +8,7 @@
 #include "Dialect/Pulse/PulseOpsTypes.cpp.inc"
 
 using namespace mlir;
-using namespace mlir::Pulse;
+using namespace mlir::pulse;
 
 Type PulseDialect::parseType(DialectAsmParser &parser) const {
   StringRef mnemonic;
