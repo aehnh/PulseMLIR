@@ -1,1 +1,3 @@
-qasm.CX %0, %1
+%a = qasm.allocate
+%b = qasm.allocate
+qasm.CX %a, %b
