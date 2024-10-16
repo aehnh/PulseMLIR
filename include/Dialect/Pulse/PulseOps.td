@@ -114,7 +114,7 @@ def Pulse_ShiftPhaseOp : Pulse_Op<"shift_phase", []> {
     AnyFloat:$phase,
     Pulse_AcquireChannelType:$ac
   );
-  let assemblyFormat = [{ attr-dict `(` $phase `,` $cha `)` `:` `(` type($phase) `,` type($ac) `)` }];
+  let assemblyFormat = [{ attr-dict `(` $phase `,` $ac `)` `:` `(` type($phase) `,` type($ac) `)` }];
   let verifier = [{ return success(); }];
 }
 
